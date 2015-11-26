@@ -50,7 +50,7 @@
                     localStorage.setItem(this.prefix + key, value);
                     this.secondaryCache.remove(key);
                 } else {
-                    this.secondaryCache(key, value);
+                    this.secondaryCache.put(key, value);
                     localStorage.removeItem(this.prefix + key);
                 }
             },
@@ -64,8 +64,9 @@
                 for (var i = 0, t = localStorage.length; i < t; i++) {
                     var key = localStorage.key(i);
 
-                    if (key.substring(0, this.prefix.length) === this.prefix) {
+                    if (key && key.substring(0, this.prefix.length) === this.prefix) {
                         localStorage.removeItem(key);
+                        i--;
                     }
                 }
 
@@ -122,6 +123,32 @@
                 return $localStorageCacheFactory;
             }
         }];
+
+        this.clear = function (cacheId) {
+            var keyPrefix = prefix + namespace + '::' + (cacheId ? cacheId : '');
+
+            // clear all matching localStorage vars (a cache object may not yet be loaded for the vars)
+            for (var i = 0, t = localStorage.length; i < t; i++) {
+                var key = localStorage.key(i);
+
+                if (key && key.substring(0, keyPrefix.length) === keyPrefix) {
+                    localStorage.removeItem(key);
+                    i--;
+                }
+            }
+
+            // clear a give cache if a cacheId was provided
+            if (cacheId && caches[cacheId]) {
+                caches[cacheId].removeAll();
+            }
+
+            // if no cacheId was provided clear all caches
+            if (!cacheId) {
+                for (var cacheId in caches) if (caches.hasOwnProperty(cache)) {
+                    caches[cacheId].removeAll();
+                }
+            }
+        }
     }]);
 
 
