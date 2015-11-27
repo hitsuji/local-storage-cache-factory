@@ -2,7 +2,7 @@
 /**!
  * AngularJS localStorageCacheFactory that mimics the functionality of $cacheFactory
  * @author  Shane O'Sullivan <hitsuji@tenmilesout.net>
- * @version 0.1.0
+ * @version 0.1.2
  */
 
 (function (window, localStorage, undefined) {
@@ -61,10 +61,10 @@
             },
 
             removeAll: function () {
-                for (var i = 0, t = localStorage.length; i < t; i++) {
+                for (var i = 0; i < localStorage.length; i++) {
                     var key = localStorage.key(i);
 
-                    if (key && key.substring(0, this.prefix.length) === this.prefix) {
+                    if (key.substring(0, this.prefix.length) === this.prefix) {
                         localStorage.removeItem(key);
                         i--;
                     }
@@ -128,10 +128,10 @@
             var keyPrefix = prefix + namespace + '::' + (cacheId ? cacheId : '');
 
             // clear all matching localStorage vars (a cache object may not yet be loaded for the vars)
-            for (var i = 0, t = localStorage.length; i < t; i++) {
+            for (var i = 0; i < localStorage.length; i++) {
                 var key = localStorage.key(i);
 
-                if (key && key.substring(0, keyPrefix.length) === keyPrefix) {
+                if (key.substring(0, keyPrefix.length) === keyPrefix) {
                     localStorage.removeItem(key);
                     i--;
                 }
